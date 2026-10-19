@@ -262,7 +262,7 @@ export const FORMS = {
   },
   volunteer: {
     submit: "Apply to volunteer", thanks: "volunteer",
-    side: { title: "Questions?", text: "Our Head of Volunteers, Layole Rumayzah, reviews every application." },
+    side: { title: "Questions?", text: "A member of our team reviews every application and gets back to you." },
     steps: [
       { title: "About you", fields: [
         { id: "name", label: "Full name", type: "text", required: true }, { id: "email", label: "Email", type: "email", required: true },
@@ -306,7 +306,7 @@ export const THANKS = {
   partner: { heading: "Thank you. Your partnership enquiry is in.", text: "Our Partnerships team will review your submission and contact you to discuss the opportunity, clarify expectations and agree the most appropriate partnership structure." },
   expertise: { heading: "Thank you for your interest in supporting RADFIRST.", text: "Our team will review your response and reach out where there is a suitable opportunity to collaborate." },
   help: { heading: "We’ve received your request.", text: "A member of our team will review it and contact you by phone or WhatsApp. Submitting this form does not guarantee financial assistance, a scan, treatment or a referral, but we will tell you what we can do and point you to other help where we can’t.", next: ["We review your request and any documents you shared.", "We contact you to understand your situation better.", "We tell you whether RADFIRST can support you, connect you to a service, or refer you elsewhere."], alert: true },
-  volunteer: { heading: "Thanks for offering your time.", text: "Our Head of Volunteers will contact you about current opportunities and how onboarding works." },
+  volunteer: { heading: "Thanks for offering your time.", text: "A member of our team will contact you about current opportunities and how onboarding works." },
   story: { heading: "Thank you for sharing your story.", text: "We read every story. We’ll contact you before anything is published, and nothing goes live without your approval." },
   contact: { heading: "Message sent.", text: "Thanks for getting in touch. We usually reply within two working days." },
   notify: { heading: "You’re on the list.", text: "We’ll send you the topic, speaker and joining link for the next Health Connect session as soon as they’re confirmed." },
