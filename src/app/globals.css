@@ -648,3 +648,59 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--green);b
   .follow .btn{padding:0 8px;gap:6px}
 }
 
+
+/* Launch reveal (components/reveal.tsx): first-visit intro on "/" and the live /unveil page.
+   Always dark, whatever the theme: it reads as an X-ray lightbox. */
+html[data-intro="off"] .reveal[data-mode="intro"]{display:none}
+html:has(.reveal[data-mode="unveil"]),html:not([data-intro="off"]):has(.reveal[data-mode="intro"]){overflow:hidden}
+.reveal{position:fixed;inset:0;z-index:100;color:#CFE4D8}
+.rv-film{position:absolute;inset:0;display:grid;place-items:center;overflow:hidden;background:radial-gradient(ellipse 70% 60% at 50% 46%,#1D302A 0%,#0B1613 72%);clip-path:inset(0 0 0 0)}
+.rv-film::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,.018) 0 1px,transparent 1px 3px);pointer-events:none}
+.rv-ribs{position:absolute;left:50%;top:50%;width:min(520px,90vw);height:auto;transform:translate(-50%,-50%) scale(1.06);opacity:0;pointer-events:none}
+.rv-ecg{position:absolute;left:50%;top:50%;width:max(100vw,900px);height:auto;transform:translate(-50%,-50%);overflow:visible}
+.rv-ecg path{stroke:#FF4A3D;stroke-width:3;stroke-linejoin:round;stroke-linecap:round;stroke-dasharray:1 1;stroke-dashoffset:1;filter:drop-shadow(0 0 6px rgba(255,74,61,.7))}
+.rv-brand{position:relative;display:grid;justify-items:center;gap:22px;padding:0 24px;opacity:0}
+.rv-logo{width:min(460px,80vw);height:auto}
+.rv-tag{margin:0;font:500 .82rem var(--mono);letter-spacing:.14em;text-transform:uppercase;text-align:center;opacity:0}
+.rv-bar{position:absolute;left:0;right:0;top:0;height:3px;margin-top:-1.5px;background:#E8F5EE;box-shadow:0 0 18px 4px rgba(76,196,134,.75),0 0 60px 12px rgba(76,196,134,.3);opacity:0;pointer-events:none}
+.rv-skip{position:absolute;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));min-height:44px;padding:0 18px;border-radius:999px;border:1px solid rgba(207,228,216,.3);background:rgba(11,22,19,.5);color:#CFE4D8;font:500 .78rem var(--mono);letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+.rv-skip:hover{border-color:#CFE4D8}
+
+/* Holding screen (unveil only) */
+.reveal[data-phase="hold"] .rv-ribs{opacity:.14;transform:translate(-50%,-50%) scale(1.06)}
+.rv-hold{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;gap:28px;padding:24px;text-align:center}
+.rv-eb{font:500 .78rem var(--mono);letter-spacing:.14em;text-transform:uppercase;opacity:.7}
+.rv-title{margin:0;font-family:var(--display);font-weight:800;font-stretch:116%;letter-spacing:-.025em;line-height:1.02;font-size:clamp(2.4rem,7vw,5.6rem);color:#E8F5EE;text-wrap:balance}
+.rv-title span{font-weight:300;font-stretch:100%;color:#4CC486}
+.rv-btn{width:136px;height:136px;margin-top:12px;border-radius:50%;border:0;background:#E3140C;color:#fff;font:500 .95rem var(--mono);letter-spacing:.16em;text-transform:uppercase;cursor:pointer;animation:rv-pulse 2.2s ease-out infinite;transition:transform .2s}
+.rv-btn:hover{transform:scale(1.05)}
+.rv-btn:focus-visible{outline:2px solid #CFE4D8;outline-offset:6px}
+.rv-flat{position:absolute;left:0;right:0;bottom:16vh;display:flex;align-items:center;color:#FF4A3D}
+.rv-flat i{flex:1;height:2px;background:currentColor;opacity:.7}
+.rv-flat span{width:9px;height:9px;border-radius:50%;background:currentColor;animation:beat 1.6s ease-in-out infinite}
+.rv-hint{position:absolute;left:0;right:0;bottom:max(20px,env(safe-area-inset-bottom));margin:0;font:500 .72rem var(--mono);letter-spacing:.1em;text-transform:uppercase;opacity:.4}
+@keyframes rv-pulse{0%{box-shadow:0 0 0 0 rgba(227,20,12,.55)}70%,100%{box-shadow:0 0 0 28px rgba(227,20,12,0)}}
+
+/* The reveal itself, about 4.5s: heartbeat → logo → scan sweep */
+.reveal[data-phase="play"]{animation:rv-done .01s 4.5s forwards}
+.reveal[data-phase="play"] .rv-hold{animation:rv-out .5s forwards}
+.reveal[data-phase="play"] .rv-ecg path{animation:rv-draw 1.4s .3s cubic-bezier(.45,0,.25,1) forwards}
+.reveal[data-phase="play"] .rv-ecg{animation:rv-out .5s 1.9s forwards}
+.reveal[data-phase="play"] .rv-ribs{animation:rv-ribs 1.9s .5s ease-in-out forwards}
+.reveal[data-phase="play"] .rv-brand{animation:rv-in .8s 1.8s ease-out forwards}
+.reveal[data-phase="play"] .rv-tag{animation:rv-in .6s 2.3s ease-out forwards}
+.reveal[data-phase="play"] .rv-film{animation:rv-sweep 1.1s 3.3s cubic-bezier(.65,0,.35,1) forwards}
+.reveal[data-phase="play"] .rv-bar{animation:rv-show .01s 3.3s forwards,rv-scan 1.1s 3.3s cubic-bezier(.65,0,.35,1) forwards,rv-out .2s 4.4s forwards}
+.reveal[data-phase="play"] .rv-skip{animation:rv-out .3s 3.1s forwards}
+@keyframes rv-draw{to{stroke-dashoffset:0}}
+@keyframes rv-ribs{50%{opacity:.3;transform:translate(-50%,-50%) scale(1)}to{opacity:0;transform:translate(-50%,-50%) scale(.94)}}
+@keyframes rv-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes rv-out{to{opacity:0;visibility:hidden}}
+@keyframes rv-show{to{opacity:1}}
+@keyframes rv-sweep{to{clip-path:inset(100% 0 0 0)}}
+@keyframes rv-scan{from{top:0}to{top:100%}}
+@keyframes rv-done{to{visibility:hidden;pointer-events:none}}
+@media (max-width:640px){
+  .rv-flat{bottom:22vh}
+  .rv-hint{display:none}
+}

@@ -26,7 +26,8 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en-NG" className={`${archivo.variable} ${instrument.variable} ${plexMono.variable}`}>
+    // suppressHydrationWarning: the launch-intro script may set data-intro before hydration.
+    <html lang="en-NG" suppressHydrationWarning className={`${archivo.variable} ${instrument.variable} ${plexMono.variable}`}>
       <body>
         <IconSprite />
         <Header />
