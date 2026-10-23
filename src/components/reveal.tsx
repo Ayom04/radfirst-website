@@ -2,37 +2,36 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
-import { INTRO_KEY } from "@/lib/intro";
 import logoDark from "../../public/img/logo-dark.png";
 import ribs from "../../public/img/ribs.png";
 
 type Phase = "hold" | "play" | "done";
 
 const noop = () => () => {};
-function introSeen() {
-  try {
-    return !!localStorage.getItem(INTRO_KEY) || matchMedia("(prefers-reduced-motion: reduce)").matches;
-  } catch {
-    return false;
-  }
+// Set once the intro has played in this tab, so clicking back to Home doesn't replay it.
+// A fresh load or refresh resets it.
+let played = false;
+function skipIntro() {
+  // Only play when the page load itself was the home page, not on in-site navigation.
+  const entry = performance.getEntriesByType("navigation")[0];
+  const loadedHere = !entry || new URL(entry.name).pathname === "/";
+  return played || !loadedHere || matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
 /**
  * The launch reveal: a heartbeat draws across a dark lightbox, settles into the logo,
  * then a scan bar sweeps down and the page develops underneath.
- * - "intro" plays once per browser on the home page.
+ * - "intro" plays every time the home page is loaded or refreshed.
  * - "unveil" waits on a holding screen until someone presses Unveil (or a presentation clicker).
  */
 export function Reveal({ mode }: { mode: "intro" | "unveil" }) {
   const [phase, setPhase] = useState<Phase>(mode === "intro" ? "play" : "hold");
   const [fullscreen, setFullscreen] = useState(false);
   // The server always renders the intro; the inline INTRO_SCRIPT hides it until hydration.
-  const seen = useSyncExternalStore(noop, introSeen, () => false);
+  const skip = useSyncExternalStore(noop, skipIntro, () => false);
 
   const finish = useCallback(() => {
-    try {
-      localStorage.setItem(INTRO_KEY, "1");
-    } catch {}
+    played = true;
     document.documentElement.dataset.intro = "off";
     if (mode === "unveil") history.replaceState(null, "", "/");
     setPhase("done");
@@ -66,7 +65,7 @@ export function Reveal({ mode }: { mode: "intro" | "unveil" }) {
     };
   }, [mode, phase, finish, start]);
 
-  if (phase === "done" || (mode === "intro" && seen)) return null;
+  if (phase === "done" || (mode === "intro" && skip)) return null;
 
   return (
     <div

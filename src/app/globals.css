@@ -649,7 +649,7 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--green);b
 }
 
 
-/* Launch reveal (components/reveal.tsx): first-visit intro on "/" and the live /unveil page.
+/* Launch reveal (components/reveal.tsx): the intro on every load of "/" and the live /unveil page.
    Always dark, whatever the theme: it reads as an X-ray lightbox. */
 html[data-intro="off"] .reveal[data-mode="intro"]{display:none}
 html:has(.reveal[data-mode="unveil"]),html:not([data-intro="off"]):has(.reveal[data-mode="intro"]){overflow:hidden}
